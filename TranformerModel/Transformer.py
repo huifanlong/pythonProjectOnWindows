@@ -115,7 +115,7 @@ class PositionalEncoding(nn.Module):
 #
 # # 然后定义画布的横纵坐标, 横坐标到100的长度, 纵坐标是某一个词汇中的某维特征在不同长度下对应的值
 # # 因为总共有20维之多, 我们这里只查看4，5，6，7维的值.
-# plt.plot(np.arange(100), y[0, :, 4:8].data.numpy())
+# plt.plot(np.arange(100), y[0, :, 4:8].mydata.numpy())
 #
 # # 在画布上填写维度提示信息
 # plt.legend(["dim %d" % p for p in [4, 5, 6, 7]])

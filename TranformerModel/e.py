@@ -8,20 +8,23 @@ from torch.nn import TransformerEncoder, TransformerEncoderLayer
 from torch.utils.data import dataset
 
 import torch
-a = torch.tensor([[ 2.2007, -1.8033],
-        [ 2.1696, -1.7009],
-        [ 2.0919, -1.7238],
-        [ 2.1982, -1.7724],
-        [ 1.7146, -1.3303],
-        [ 1.9186, -1.5727],
-        [ 1.9959, -1.6094],
-        [ 1.9373, -1.5351]])
+
+a = torch.tensor([[2.2007, -1.8033],
+                  [2.1696, -1.7009],
+                  [2.0919, -1.7238],
+                  [2.1982, -1.7724],
+                  [1.7146, -1.3303],
+                  [1.9186, -1.5727],
+                  [1.9959, -1.6094],
+                  [1.9373, -1.5351]])
 predicts2 = torch.argmax(a, dim=1)
-input_max=torch.max(input,dim=1,keepdim=False)[0]
+input_max = torch.max(input, dim=1, keepdim=False)[0]
 print(input_max)
 print(input_max.shape)
 
 print(torch.__version__)
+
+
 class TransformerModel(nn.Module):
 
     def __init__(self, ntoken: int, d_model: int, nhead: int, d_hid: int,
@@ -114,7 +117,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def batchify(data: Tensor, bsz: int) -> Tensor:
-    """Divides the data into bsz separate sequences, removing extra elements
+    """Divides the mydata into bsz separate sequences, removing extra elements
     that wouldn't cleanly fit.
 
     Args:
@@ -136,7 +139,6 @@ train_data = batchify(train_data, batch_size)  # shape [seq_len, batch_size]
 val_data = batchify(val_data, eval_batch_size)
 test_data = batchify(test_data, eval_batch_size)
 
-
 bptt = 35
 
 
@@ -147,13 +149,14 @@ def get_batch(source: Tensor, i: int) -> Tuple[Tensor, Tensor]:
         i: int
 
     Returns:
-        tuple (data, target), where data has shape [seq_len, batch_size] and
+        tuple (mydata, target), where mydata has shape [seq_len, batch_size] and
         target has shape [seq_len * batch_size]
     """
     seq_len = min(bptt, len(source) - 1 - i)
-    data = source[i:i+seq_len]
-    target = source[i+1:i+1+seq_len].reshape(-1)
+    data = source[i:i + seq_len]
+    target = source[i + 1:i + 1 + seq_len].reshape(-1)
     return data, target
+
 
 ntokens = len(vocab)  # size of vocabulary
 emsize = 200  # embedding dimension
@@ -163,7 +166,6 @@ nhead = 2  # number of heads in nn.MultiheadAttention
 dropout = 0.2  # dropout probability
 model = TransformerModel(ntokens, emsize, nhead, d_hid, nlayers, dropout).to(device)
 
-
 import copy
 import time
 
@@ -171,6 +173,7 @@ criterion = nn.CrossEntropyLoss()
 lr = 5.0  # learning rate
 optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1.0, gamma=0.95)
+
 
 def train(model: nn.Module) -> None:
     model.train()  # turn on train mode
@@ -188,7 +191,6 @@ def train(model: nn.Module) -> None:
         output = model(data, src_mask)
         loss = criterion(output.view(-1, ntokens), targets)
 
-
         optimizer.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
@@ -205,7 +207,6 @@ def train(model: nn.Module) -> None:
                   f'loss {cur_loss:5.2f} | ppl {ppl:8.2f}')
             total_loss = 0
             start_time = time.time()
-
 
 
 def evaluate(model: nn.Module, eval_data: Tensor) -> float:

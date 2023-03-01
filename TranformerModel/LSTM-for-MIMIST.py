@@ -62,11 +62,11 @@ train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=batch_
 test_loader = torch.utils.data.DataLoader(dataset=test_data, batch_size=batch_size, shuffle=False)
 
 data = next(iter(train_loader))  # train_loader是迭代器
-# print(data[0].shape)  # data的第一个元素为64个（1*28*28的图像）
-# print(data[1].shape)  # data的第二个元素为64个标签
-# print("data[0]", data[0])
-# print("data[1]", data[1])
-# print(np.array(data).shape)
+# print(mydata[0].shape)  # data的第一个元素为64个（1*28*28的图像）
+# print(mydata[1].shape)  # data的第二个元素为64个标签
+# print("mydata[0]", mydata[0])
+# print("mydata[1]", mydata[1])
+# print(np.array(mydata).shape)
 # 每次迭代为64张图片由batch_size决定， 1为通道数（灰白图片）
 
 test_data = torchvision.datasets.MNIST(root='./mnist/', train=False, transform=transforms.ToTensor())

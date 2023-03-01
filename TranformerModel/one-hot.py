@@ -14,7 +14,7 @@ for token in vocab:
     zero_list[token_index] = 1
     print(token, "的one-hot编码为", zero_list)
 
-tokenizer_path = "./Tokenizer"
+tokenizer_path = "Tokenizer"
 joblib.dump(t, tokenizer_path)
 
 #  加载构造好的Tokenizer

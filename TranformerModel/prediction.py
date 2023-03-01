@@ -140,10 +140,10 @@ class Vocabulary:
 
 def make_vocabularies():
     """从文件中读取数据"""
-    df_events = pd.read_excel('data/processed_clickevent_edutec.xlsx', usecols=[1, 2, 3, 4, 6, 7],
+    df_events = pd.read_excel('mydata/processed_clickevent_edutec.xlsx', usecols=[1, 2, 3, 4, 6, 7],
                               converters={"event": event_converter, "state": state_converter,
                                           "rate": rate_converter}, index_col=[0, 1])
-    df_records = pd.read_csv('data/quiz_record_edutec.csv', header=None, usecols=[1, 2, 9],
+    df_records = pd.read_csv('../mydata/row/quiz_record_edutec.csv', header=None, usecols=[1, 2, 9],
                              names=['vid', 'id', 'score'],
                              index_col=[1, 0])
     uv_index = df_records.index.unique().to_numpy()  # 获取record中的index
@@ -211,13 +211,13 @@ class TransformerModel(nn.Module):
     def init_weights(self) -> None:
         initrange = 0.1
         self.encoder.emb_e.weight.data.uniform_(-initrange, initrange)
-        # self.encoder.emb_e.bias.data.zero_()
+        # self.encoder.emb_e.bias.mydata.zero_()
         self.encoder.emb_p.weight.data.uniform_(-initrange, initrange)
-        # self.encoder.emb_p.bias.data.zero_()
+        # self.encoder.emb_p.bias.mydata.zero_()
         self.encoder.emb_s.weight.data.uniform_(-initrange, initrange)
-        # self.encoder.emb_s.bias.data.zero_()
+        # self.encoder.emb_s.bias.mydata.zero_()
         self.encoder.emb_r.weight.data.uniform_(-initrange, initrange)
-        # self.encoder.emb_r.bias.data.zero_()
+        # self.encoder.emb_r.bias.mydata.zero_()
         self.decoder.bias.data.zero_()
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
@@ -442,4 +442,4 @@ for epoch in range(1, epochs + 1):
 plot(all_train_losses, "loss")
 plot(all_train_acc, "acc")
 
-torch.save(model, 'data/transformer.pth')
+torch.save(model, '../mydata/transformer.pth')
