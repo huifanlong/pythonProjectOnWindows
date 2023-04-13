@@ -8,8 +8,15 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
-from traditional_way.data_reader.notebook_reader import df_notes
-from traditional_way.data_reader.like_collection_list_reader import df_likes, df_collections
+from traditional_way.data_reader.notebook_reader import df_notes_edu
+from traditional_way.data_reader.like_collection_list_reader import df_likes_edu, df_collections_edu
+
+"""
+项目介绍：
+使用四种传统的机器学习（bskt，贝叶斯、svm、knn、决策树）模型，预测学生观看视频后的答题准确率，称之为FCA(First Chance Accuracy)任务
+数据集：教育技术2022
+特征：['visit_num', 'interval', 'online', 'notebooks', 'is_week', 'is_like', 'hour', 'completion', 'is_collect']以及视频位置点击流（当做文本进行PCA）
+"""
 
 
 def convert_time_record(data):
@@ -18,7 +25,7 @@ def convert_time_record(data):
 
 
 # 从reader保存的数据文件中读取
-df_grade = pd.read_csv("../../mydata/processed/grade.csv")
+df_grade = pd.read_csv("../../mydata/processed/quiz_grade_edutec.csv")
 df_quiz_inf = pd.read_csv("../../mydata/processed/quiz_inf.csv")
 df_time_record = pd.read_csv("../../mydata/processed/record.csv")
 
@@ -35,13 +42,13 @@ df_merge["timerecord"] = df_merge["timerecord"].apply(convert_time_record)
 df_merge = pd.merge(df_merge, df_quiz_inf, on=["uid", "vid"], how="inner")
 
 # 合并notebook数据
-df_merge = pd.merge(df_merge, df_notes, on=["uid", "vid"], how="left")
+df_merge = pd.merge(df_merge, df_notes_edu, on=["uid", "vid"], how="left")
 df_merge["notebooks"] = df_merge["notebooks"].fillna(0).astype("int64")
 # 合并like_list
-df_merge = pd.merge(df_merge, df_likes, on=["uid", "vid"], how="left")
+df_merge = pd.merge(df_merge, df_likes_edu, on=["uid", "vid"], how="left")
 df_merge["is_like"] = df_merge["is_like"].fillna(0).astype("int64")
 # 合并collection_list
-df_merge = pd.merge(df_merge, df_collections, on=["uid", "vid"], how="left")
+df_merge = pd.merge(df_merge, df_collections_edu, on=["uid", "vid"], how="left")
 df_merge["is_collect"] = df_merge["is_collect"].fillna(0).astype("int64")
 
 # dis = df_merge.describe()

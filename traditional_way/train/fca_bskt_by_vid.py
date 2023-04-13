@@ -8,9 +8,13 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
-from traditional_way.data_reader.notebook_reader import df_notes
-from traditional_way.data_reader.like_collection_list_reader import df_likes, df_collections
+from traditional_way.data_reader.notebook_reader import df_notes_edu
+from traditional_way.data_reader.like_collection_list_reader import df_likes_edu, df_collections_edu
 
+"""
+项目介绍：
+区别于fca_bskt项目，本项目在每个视频下单独划分训练集和测试集，即按照视频进行预测；
+"""
 
 def convert_time_record(data):
     list_1 = [("o" + e if len(e) == 1 else e) for e in data.split(" ")]
@@ -18,7 +22,7 @@ def convert_time_record(data):
 
 
 # 从reader保存的数据文件中读取
-df_grade = pd.read_csv("../../mydata/processed/grade.csv")
+df_grade = pd.read_csv("../../mydata/processed/quiz_grade_edutec.csv")
 df_quiz_inf = pd.read_csv("../../mydata/processed/quiz_inf.csv")
 df_time_record = pd.read_csv("../../mydata/processed/record.csv")
 
@@ -34,13 +38,13 @@ df_merge["timerecord"] = df_merge["timerecord"].apply(convert_time_record)
 # 合并trace数据
 df_merge_all = pd.merge(df_merge, df_quiz_inf, on=["uid", "vid"], how="inner")
 # 合并notebook数据
-df_merge_all = pd.merge(df_merge_all, df_notes, on=["uid", "vid"], how="left")
+df_merge_all = pd.merge(df_merge_all, df_notes_edu, on=["uid", "vid"], how="left")
 df_merge_all["notebooks"] = df_merge_all["notebooks"].fillna(0).astype("int64")
 # 合并like_list
-df_merge_all = pd.merge(df_merge_all, df_likes, on=["uid", "vid"], how="left")
+df_merge_all = pd.merge(df_merge_all, df_likes_edu, on=["uid", "vid"], how="left")
 df_merge_all["is_like"] = df_merge_all["is_like"].fillna(0).astype("int64")
 # 合并collection_list
-df_merge_all = pd.merge(df_merge_all, df_collections, on=["uid", "vid"], how="left")
+df_merge_all = pd.merge(df_merge_all, df_collections_edu, on=["uid", "vid"], how="left")
 df_merge_all["is_collect"] = df_merge_all["is_collect"].fillna(0).astype("int64")
 
 bys_vid, svm_vid, tree_vid, knn_vid = [], [], [], []  # 记录四种算法，在每个vid下的表现
