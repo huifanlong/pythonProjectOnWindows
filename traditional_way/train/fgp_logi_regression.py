@@ -70,6 +70,7 @@ df_quiz = df_quiz.groupby("uid").agg({"used_time(s)": "mean", "grade": "mean", "
     columns={"used_time(s)": "q_time", "grade": "q_grade"}).reset_index()
 # df_quiz_db = df_quiz_db.groupby("uid").agg({"used_time(s)": "mean", "grade": "mean", "q_order": "mean"}).rename(
 #     columns={"used_time(s)": "q_time", "grade": "q_grade"}).reset_index()
+df_quiz = df_quiz.groupby("uid").agg({"used_time(s)": "mean", "grade": "mean", "q_order": "mean"}).rename(columns={"used_time(s)": "q_time", "grade": "q_grade"}).reset_index()
 
 """
 点赞收藏数据处理：读取数据的任务由like_collection_list_reader处理，直接导入即可
@@ -107,6 +108,7 @@ df_data = pd.merge(df_record, df_ref, on="uid", how="outer").fillna(0)
 # 合并笔记特征
 df_data = pd.merge(df_data, df_total_notes, on="uid", how="outer").fillna(0)
 # 合并视频测验特征
+
 df_data = pd.merge(df_data, df_quiz, on="uid", how="outer")
 # 给‘q_order’为nan的值填充对应课程人数值
 df_data["q_order"] = df_data.groupby("uid")["q_order"].transform(
@@ -114,6 +116,9 @@ df_data["q_order"] = df_data.groupby("uid")["q_order"].transform(
     else len(df_grade_db) if(pd.isnull(x.iloc[0])) else x.iloc[0])
 # 其他两个字段q_time,q_grade填充为0
 df_data = df_data.fillna(0)
+
+df_data = pd.merge(df_data, df_quiz, on="uid", how="outer").fillna(0)
+
 # 合并点赞收藏也正
 df_data = pd.merge(df_data, df_likes_collections, on="uid", how="outer").fillna(0)
 
